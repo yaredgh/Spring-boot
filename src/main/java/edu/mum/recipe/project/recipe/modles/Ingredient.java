@@ -14,6 +14,17 @@ public class Ingredient {
     private Recipe recipe;
     @OneToOne
     private UnitMeasure unitMeasure;
+
+    public Ingredient() {
+    }
+
+    public Ingredient(String ripe_avocados, BigDecimal bigDecimal, UnitMeasure eachUom) {
+        this.description = ripe_avocados;
+        this.amount = bigDecimal;
+        this.unitMeasure = eachUom;
+
+    }
+
     public Long getId() {
         return id;
     }

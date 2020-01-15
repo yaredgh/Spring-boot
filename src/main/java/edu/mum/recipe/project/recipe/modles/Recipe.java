@@ -1,6 +1,7 @@
 package edu.mum.recipe.project.recipe.modles;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -13,7 +14,9 @@ public class Recipe {
     private int servings;
     private String source;
     private String url;
+    @Column(nullable = false, length = 4096)
     private String directions;
+    private String description;
     @Enumerated(EnumType.STRING)
     private Difficulty difficulty;
     @Lob
@@ -21,12 +24,13 @@ public class Recipe {
     @OneToOne(cascade = CascadeType.ALL)
     private Note note;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "recipe")
-    private Set<Ingredient> ingredientSet ;
+    private Set<Ingredient> ingredientSet = new HashSet<>();
 
     @ManyToMany
     @JoinTable(name = "recipe_category",joinColumns = @JoinColumn(name = "recipe_id")
     ,inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private Set<Category>categories;
+
+    private Set<Category>categories = new HashSet<>();
     public Recipe() {
     }
 
@@ -70,6 +74,36 @@ public class Recipe {
         this.source = source;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public Recipe addIngredient(Ingredient ingredient){
+        ingredient.setRecipe(this);
+        this.ingredientSet.add(ingredient);
+        return this;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Set<Ingredient> getIngredientSet() {
+        return ingredientSet;
+    }
+
+    public void setIngredientSet(Set<Ingredient> ingredientSet) {
+        this.ingredientSet = ingredientSet;
+    }
+
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
+    }
+
     public String getUrl() {
         return url;
     }
@@ -108,5 +142,6 @@ public class Recipe {
 
     public void setNote(Note note) {
         this.note = note;
+        note.setRecipe(this);
     }
 }
